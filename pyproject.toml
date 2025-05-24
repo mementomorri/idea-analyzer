@@ -1,0 +1,19 @@
+[project]
+name = "idea-analyzer"
+version = "0.1.0"
+requires-python = ">=3.12,<4.0"
+dependencies = [
+  "click",
+  "python-dotenv",
+  "openai",
+  "pytrends",
+  "beautifulsoup4",
+  "requests",
+  "pandas>=2.2.3",
+  "numpy>=2.2.6",
+  "pytz>=2025.2",
+  "python-dateutil>=2.9.0.post0",
+]
+
+[tool.uv]
+# optional: custom sources or lockfile settings
