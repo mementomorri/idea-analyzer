@@ -20,7 +20,6 @@ def analyze_sentiment(comments: list[str]) -> tuple[float, list[str]]:
         max_tokens=100,
     )
     out = resp.choices[0].message.content.split('\n')
-    print(out)
     score, quotes = 0.0, []
     for line in out:
         sentiment = line.find('Sentiment Score')
