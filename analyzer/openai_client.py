@@ -8,27 +8,25 @@ client = OpenAI(api_key=api_key)
 
 def analyze_sentiment(comments: list[str]) -> tuple[float, list[str]]:
     text = "\n".join(comments)
-    resp = client.chat.completions.create(
-        model='gpt-4o-mini',
-        messages=[
-            {
-                'role': 'system',
-                'content': 'Analyze sentiment (0-1) and give two representative quotes.',
-            },
-            {'role': 'user', 'content': text},
-        ],
-        max_tokens=100,
-    )
-    out = resp.choices[0].message.content.split('\n')
-    score, quotes = 0.0, []
-    for line in out:
-        sentiment = line.find('Sentiment Score')
-        if sentiment != -1:
-            score_raw = line.split(':')[1].strip()
-            score = float(re.findall(r'\d+\.\d+', score_raw)[0])
-            quotes = eval(line.split(':', 1)[1].strip())
-            break
-    return score, quotes
+    try:
+        resp = client.chat.completions.create(
+            model='gpt-4o-mini',
+            messages=[
+                {
+                    'role': 'system',
+                    'content': 'Return JSON: {"score": float, "quotes": [str, str]}',
+                },
+                {'role': 'user', 'content': text},
+            ],
+            max_tokens=150,
+        )
+        import json
+
+        content = resp.choices[0].message.content.strip()
+        data = json.loads(content)
+        return data["score"], data["quotes"]
+    except Exception as e:
+        return 0.0, ["Error parsing sentiment analysis", str(e)]
 
 
 def get_market_insights(keyword: str) -> str:
